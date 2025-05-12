@@ -20,13 +20,20 @@ def extract_student_from_path(file_path):
     return ""
 
 def extract_seccion(file_path):
-    match = re.search(r'proyectos/[^/]*?_(\d+)_N2_PROY', file_path, re.IGNORECASE)
+    match = re.search(r'proyectos[\\/]\d+_[A-Z]+\d+_(\d+)_N3_PROY', file_path, re.IGNORECASE)
     if match:
         return match.group(1)
     return ""
 
 def clean_file_name(file_path):
-    return re.sub(r"^/Users/ardila/Downloads/", "", file_path)
+    # Normalize path by replacing backslashes with forward slashes
+    normalized_path = file_path.replace("\\", "/")
+    # Remove the fixed prefix
+    cleaned_path = re.sub(r"^C:/Users/fuque/Pictures/CupiPlagio/FuquenFinal/proyectos/", "", normalized_path)
+    # Restore backslashes for consistency
+    return cleaned_path.replace("/", "\\")
+
+
 
 def search_patterns(content, patterns):
     content = remove_iniciar_aplicacion_function(content)
@@ -45,6 +52,7 @@ def search_patterns(content, patterns):
     return matches
 
 def process_file(content, file_identifier, patterns, report):
+
     matches = search_patterns(content, patterns)
     if matches:
         record = {
