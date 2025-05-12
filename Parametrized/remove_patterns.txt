@@ -1,0 +1,2 @@
+iniciar_aplicacion,^def\s+iniciar_aplicacion\(\)\s*->\s*None:\s*\n(?:(?:[ \t]+.*\n)|(?:[ \t]*\n))+
+while_ejecutando,^\s*while\s+ejecutando.*\n?

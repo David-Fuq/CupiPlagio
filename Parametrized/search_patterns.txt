@@ -1,0 +1,3 @@
+lambda_expressions,\blambda\b
+list_comprehensions,\[\s*[^]]*\s+for\s+[^]]*\s+in\s+[^]]*\]
+try_block,\btry\s*:
