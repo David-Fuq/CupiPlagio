@@ -38,7 +38,7 @@ def load_patterns(file_path):
                 if line:
                     try:
                         print(type(line))
-                        name, regex = line.split(",")
+                        name, regex = line.split("XXX")
                         print(f"Loading pattern: {name} -> {regex}")
                         patterns[name] = re.compile(regex)
                         print(f"Loaded pattern: {name} -> {regex}")  # Print as read from the file

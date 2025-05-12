@@ -4,12 +4,13 @@ try_blockXXX\btry\s*:
 mapXXX\bmap\s*\([^()]*\)
 allXXX\ball\s*\([^()]*\)
 anyXXX\bany\s*\([^()]*\)
+dictionary_comprehensionsXXX\{[^{]*:[^{]*\s+for\s+[^}]*\}
 iterXXX\biter\s*\([^()]*\)
 nextXXX\bnext\s*\([^()]*\)
 assertXXX\bassert\s+
 tupleXXX\btuple\s*\([^()]*\)
 itemsXXX\.items\s*\([^()]*\)
 setdefaultXXX\.setdefault\s*\([^()]*\)
-dictionary_comprehensionsXXX\{[^{}]*:\s*[^{}]*\s+for\s+[^{}]*\}
-tuple_packingXXX[a-zA-Z_]\w*\s*=\s*\(.*?,.*?\)
+explicit_tupleXXX\(\s*([a-zA-Z0-9'_]+\s*,\s*)+[a-zA-Z0-9'_]+\s*\)
+implicit_tupleXXX\b[a-zA-Z0-9'_]+\s*(,\s*[a-zA-Z0-9'_]+\s*)+\b
 tuple_unpackingXXX\((\s*[a-zA-Z_]\w*\s*,)+\s*[a-zA-Z_]\w*\s*\)\s*=
