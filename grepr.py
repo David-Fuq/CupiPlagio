@@ -51,16 +51,15 @@ def process_file(content, file_identifier, patterns, report):
             "file_name": clean_file_name(file_identifier),
             "student": extract_student_from_path(file_identifier),
             "seccion": extract_seccion(file_identifier),
-            "loops": "",
             "lambda_expressions": "",
             "list_comprehensions": "",
             "try": ""
         }
-        for key in ["loops", "lambda_expressions", "list_comprehensions", "try"]:
+        for key in ["lambda_expressions", "list_comprehensions", "try"]:
             if key in matches:
                 record[key] = " | ".join(matches[key])
         print(f"File: {file_identifier}")
-        for key in ["loops", "lambda_expressions", "list_comprehensions", "try"]:
+        for key in ["lambda_expressions", "list_comprehensions", "try"]:
             if record[key]:
                 print(f"  {key}: {record[key]}")
         print('-' * 40)
@@ -110,13 +109,13 @@ def process_zip_file(zip_file, patterns, report, parent_path=None):
 
 def search_code(folder):
     patterns = {
-        "loops": re.compile(r'\b(for|while|next|map)\b'),
         "lambda_expressions": re.compile(r'\blambda\b'),
         "list_comprehensions": re.compile(r'\[\s*[^]]*\s+for\s+[^]]*\s+in\s+[^]]*\]'),
         "try": re.compile(r'\btry\s*:', re.IGNORECASE)
     }
     report = []
     for root, dirs, files in os.walk(folder):
+        print(f"Searching in directory: {root}")
         dirs[:] = [d for d in dirs if not re.fullmatch(r'\d+', d)]
         for file in files:
             file_path = os.path.join(root, file)
@@ -130,7 +129,7 @@ def search_code(folder):
     return report
 
 def save_report_csv(report, output_csv='report.csv'):
-    fieldnames = ["file_name", "student", "seccion", "loops", "lambda_expressions", "list_comprehensions", "try"]
+    fieldnames = ["file_name", "student", "seccion", "lambda_expressions", "list_comprehensions", "try"]
     try:
         with open(output_csv, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -143,7 +142,12 @@ def save_report_csv(report, output_csv='report.csv'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("")
-    parser.add_argument("folder", nargs='?', default="FuquenFinal", help="")
+    parser.add_argument("folder", nargs='?', default="C:/Users/fuque/Pictures/CupiPlagio/FuquenFinal", help="")
     args = parser.parse_args()
+    print(args)
+    print(f"Searching in folder: {args.folder}")
+    if not os.path.exists(args.folder):
+        print(f"Folder {args.folder} does not exist.")
+        exit(1)
     report = search_code(args.folder)
     save_report_csv(report)

@@ -1,0 +1,512 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+CupiTube
+"""
+
+# Función 1: REVISAR
+
+
+
+def cargar_cupitube(archivo: str) -> dict:
+    
+    with open("cupitube.csv","r",encoding="utf-8") as archivo:
+    
+        dict_cupitubers = {}
+    
+        linea = archivo.readline ().strip().split(",")
+
+   
+      
+        for linea in archivo:
+            lista_cupituber = linea.strip().split(",")
+            rank = lista_cupituber [0]
+            name = lista_cupituber [1]
+            subscribers = lista_cupituber [2]
+            video_views = lista_cupituber [3]
+            video_count = lista_cupituber [4]
+            category = lista_cupituber [5]
+            started = lista_cupituber [6]
+            country = lista_cupituber [7]
+            monetization_type = lista_cupituber[8]
+            description = lista_cupituber [9]
+            
+            
+            
+            
+            informacion_cupituber = {
+            "rank":rank,
+            "name":name,
+            "subscribers":subscribers,
+            "video_views":video_views,
+            "video_count":video_count,
+            "category":category,
+            "started":started,
+            "country":country,
+            "monetization_type":monetization_type,
+            "description":description,
+                }
+            
+            if country not in dict_cupitubers :
+                dict_cupitubers [country]= []
+                
+            
+            dict_cupitubers[country].append(informacion_cupituber)
+            
+        
+        return (dict_cupitubers)
+    
+  
+   
+
+    
+    
+
+
+
+
+
+"""
+    Carga un archivo en formato CSV (Comma-Separated Values) con la información de los CupiTubers y 
+    los organiza en un diccionario donde la llave es el país de origen.
+    
+    Parámetros:
+        archivo (str): Ruta del archivo CSV con la información de los CupiTubers, incluyendo la extensión.
+                       Ejemplo: "./cupitube.csv" (si el archivo CSV está en el mismo directorio que este archivo).
+    
+    Retorno:
+        dict: Diccionario estructurado de la siguiente manera:
+            
+            - Las llaves representan los países de donde provienen los CupiTubers.
+              - El país de origen de un CupiTuber se encuentra en la columna "country" del archivo CSV.
+              - El país es un string no vacío, sin espacios al inicio o al final.
+                Ejemplo: "India"
+            
+            - Los valores son listas de diccionarios, donde cada diccionario representa un CupiTuber. 
+              - Cada diccionario contiene los siguientes campos basados en las columnas del archivo CSV:
+    
+                "rank" (int): Ranking del CupiTuber en el mundo. Es un valor entero mayor a cero.
+                              Ejemplo: 1
+    
+                "cupituber" (str): Nombre del CupiTuber. Es un string no vacío, sin espacios al inicio o al final.
+                                   Ejemplo: "T-Series"
+    
+                "subscribers" (int): Cantidad de suscriptores del CupiTuber. Es un valor entero mayor a cero.
+                                     Ejemplo: 222000000
+    
+                "video_views" (int): Cantidad de visitas de todos los videos del CupiTuber. Es un valor entero mayor o igual a cero.
+                                     Ejemplo: 198459090822
+    
+                "video_count" (int): Cantidad de videos publicados por el CupiTuber. Es un valor entero mayor o igual a cero.
+                                     Ejemplo: 17317
+    
+                "category" (str): Categoría principal de los videos del CupiTuber. Es un string no vacío, sin espacios al inicio o al final.
+                                  Ejemplo: "Music"
+    
+                "started" (str): Fecha en la que el CupiTuber empezó a publicar videos en formato YYYY-MM-DD.
+                                Es un string no vacío, sin espacios al inicio o al final.
+                                Ejemplo: "2006-11-15"
+    
+                "monetization_type" (str): Tipo de monetización de los videos del CupiTuber. Es un string no vacío, sin espacios al inicio o al final.
+                                           Ejemplo: "AdSense"
+    
+                "description" (str): Descripción del tipo de videos que publica el CupiTuber. Es un string no vacío, sin espacios al inicio o al final.
+                                     Ejemplo: "Amazing travel vlogs worldwide!"
+    
+"""
+"""
+    
+    Notas importantes:
+        1. Al usar readline(), agregue strip() de esta forma: readline().strip() para garantizar que se eliminen los saltos de línea.
+            Documentación de str.strip(): https://docs.python.org/es/3/library/stdtypes.html#str.strip
+            Documentación de readline(): https://docs.python.org/es/3/tutorial/inputoutput.html#methods-of-file-objects
+            
+        2. Al usar open(), agregue la codificación "utf-8" de esta forma: open(archivo, "r", encoding="utf-8") para garantizar la lectura de caracteres especiales del archivo CSV.
+        
+       """
+   
+  
+
+# Función 2:
+def buscar_por_categoria_y_rango_suscriptores(cupitube: dict, suscriptores_min: int, suscriptores_max: int, categoria_buscada: str) -> list:
+      
+    listado = []
+    
+    for country in cupitube:
+            cupitubers = cupitube [country]
+            
+            for cupituber in cupitubers:
+                subscribers = cupituber ["subscribers"]
+                category = cupituber ["category"]
+                
+                if (int (subscribers)) >= suscriptores_min and (int(subscribers)) <= suscriptores_max and category == categoria_buscada:
+                    
+                 listado.append(cupituber)   
+                
+    return listado
+
+
+
+            
+    
+    """
+    Busca los CupiTubers que pertenecen a la categoría dada y cuyo número de suscriptores esté dentro del rango especificado.
+    
+    Parámetros:
+        cupitube (dict): Diccionario con la información de los CupiTubers.
+        suscriptores_min (int): Cantidad mínima de suscriptores requerida (inclusiva).
+        suscriptores_max (int): Cantidad máxima de suscriptores permitida (inclusiva).
+        categoria_buscada (str): Categoría de los videos del CupiTuber que se busca.
+        
+    Retorno:
+        list: Lista con el o los diccionarios de los CupiTubers que cumplen con todos los criterios de búsqueda.
+              Si no se encuentra ningún CupiTuber, retorna una lista vacía.
+    
+    Ejemplo:
+        Para los siguientes valores:
+        - suscriptores_min = 1000000
+        - suscriptores_max = 111000000
+        - categoria_buscada = "Gaming"
+        
+        Hay exactamente 102 cupitubers que cumplen con los criterios de búsqueda y que deben ser reportados en la lista retornada.
+        ATENCIÓN: Este solo es un ejemplo de consulta exitosa en el dataset. Su función debe ser implementada para cualquier valor dado de: suscriptores_min, suscriptores_max y categoria_buscada.
+    """
+    #TODO 2: Implemente la función tal y como se describe en la documentación.
+    pass
+
+
+# Función 3:
+def buscar_cupitubers_por_pais_categoria_monetizacion(cupitube: dict, pais_buscado: str, categoria_buscada: str, monetizacion_buscada: str) -> list:
+    
+    listado = []
+    
+
+    if pais_buscado in cupitube:       
+        for cupituber in cupitube [pais_buscado]:
+            category = cupituber ["category"]
+            monetization = cupituber ["monetization_type"]
+            if categoria_buscada == category and monetizacion_buscada == monetization:
+                listado.append(cupituber)   
+
+    return listado
+    
+    
+    
+    
+    
+    
+    """
+    Busca los CupiTubers de un país, categoría y tipo de monetización buscados.
+    
+    Parámetros:
+        cupitube (dict): Diccionario de países con la información de los CupiTubers.
+        pais_buscado (str): País de origen buscado.
+        categoria_buscada (str): Categoría buscada.
+        monetizacion_buscada (str): Tipo de monetización buscada (monetization_type).
+        
+    Ejemplo:    
+       Dado el país "UK", la categoría "Gaming" y el tipo de monetización "Crowdfunding",  hay un CupiTuber que cumpliría con estos criterios de búsqueda:
+           [{'rank': 842, 'cupituber': 'TommyInnit', 'subscribers': 11800000, 'video_views': 1590238217, 'video_count': 289, 'category': 'Gaming', 'started': '2015-03-07', 'monetization_type': 'Crowdfunding', 'description': 'wEird fActs aND ExPERiments!'}]
+       ATENCIÓN: Este solo es un ejemplo de consulta existosa en el dataset. Su función debe ser implementada para cualquier valor dado de: pais_buscado, categoria_buscada y monetizacion_buscada
+        
+    Retorno:
+        list: Lista con el o los diccionarios de los CupiTubers que tienen como origen el país buscado, su categoría coincide con la categoría buscada y su tipo de monetización coincide con la monetización buscada.
+                Si no se encuentra ningún CupiTuber o el país buscado no existe, se retorna una lista vacía.
+    """
+    #TODO 3: Implemente la función tal y como se describe en la documentación.
+    pass
+
+
+# Función 4:
+def buscar_cupituber_mas_antiguo(cupitube: dict) -> dict:
+    
+    menor_fecha = "2025-03-10"
+    
+    
+    for country in cupitube:
+        cupitubers = cupitube [country]
+        
+        for cupituber in cupitubers:  
+            
+            
+            if cupituber["started"] < menor_fecha:
+                menor_fecha = cupituber["started"]
+                cupituber_antiguo = cupituber
+                
+                
+    return cupituber_antiguo
+                
+                
+                
+    
+    
+    """
+    Busca al CupiTuber más antiguo con base en la fecha de inicio (started).
+    
+    Parámetros:
+        cupitube (dict): Diccionario con la información de los CupiTubers.
+    
+    Retorno:
+        dict: Diccionario con la información del CupiTuber más antiguo.
+              En caso de empate (misma fecha de inicio o started), se retorna el primer CupiTuber encontrado.
+    
+    Nota:
+        Las fechas de inicio de los CupiTubers ("started") en el dataset están en el formato "YYYY-MM-DD" (Año-Mes-Día).
+        En Python, este formato permite que las fechas puedan compararse directamente como strings, ya que el orden lexicográfico coincide con el orden cronológico.
+        
+        Ejemplos de comparaciones:
+            "2005-02-15" < "2006-06-10"  # → True (Porque 2005 es anterior a 2006)
+            "2010-08-23" > "2009-12-31"  # → True (Porque 2010 es posterior a 2009)
+            "2015-03-10" < "2015-03-20"  # → True (Mismo año y mes, pero el día 10 es anterior al día 20)
+    """
+    #TODO 4: Implemente la función tal y como se describe en la documentación.
+    pass
+            
+
+# Función 5:
+def obtener_visitas_por_categoria(cupitube: dict, categoria_buscada: str) -> int:
+    
+    total_visitas = 0
+    
+    for country in cupitube :
+        cupitubers = cupitube [country]
+        
+        for cupituber in cupitubers:
+            if categoria_buscada == cupituber.get ("category"):
+                total_visitas += int (cupituber.get ("video_views"))
+                
+                
+    return total_visitas
+                
+    
+    
+    """
+    Obtiene el número total de visitas (video_views) acumuladas para una categoría dada de CupiTubers.
+    
+    Parámetros:
+       cupitube (dict): Diccionario con la información de los CupiTubers.
+       categoria_buscada (str): Nombre de la categoría de interés.
+    
+    Retorno:
+       int: Número total de visitas para la categoría especificada.
+           - Si la categoría aparece en múltiples CupiTubers, sus visitas se suman.
+           - Si la categoría no está presente en los datos, el resultado a retornar será 0.
+    
+    Ejemplo:
+       Dada la categoría "Music", hay un total de 2906210355935 vistas.
+       ATENCIÓN: Este solo es un ejemplo de consulta existosa en el dataset. Su función debe ser implementada para cualquier valor dado de: categoria_busqueda.
+    """
+    #TODO 5: Implemente la función tal y como se describe en la documentación.
+    pass
+
+
+# Función 6:
+def obtener_categoria_con_mas_visitas(cupitube: dict) -> dict:
+    
+    mayores_visitas = 0
+  
+    
+    for country in cupitube :
+        cupitubers = cupitube [country]
+        
+        for cupituber in cupitubers:
+            category = cupituber.get ("category")
+            visitas = obtener_visitas_por_categoria(cupitube,category)
+            if visitas > mayores_visitas:
+                categoria_mas_visitas = category
+                mayores_visitas = visitas
+                
+    return categoria_mas_visitas
+                
+                
+                
+            
+                
+    
+    
+    
+    
+    """
+    Identifica la categoría con el mayor número de visitas (video_views) acumuladas.
+    
+    Parámetros:
+        cupitube (dict): Diccionario con la información de los CupiTubers.
+        
+    Retorno:
+        dict: Diccionario con las siguientes llaves:
+            - "categoria": Cuyo valor asociado es el nombre de la categoría con más visitas.
+            - "visitas": cuyo valor asociado es la cantidad total de visitas de la categoría con más visitas.
+        Si hay varias categorías con la misma cantidad máxima de visitas, se retorna la primera encontrada en el recorrido total del diccionario.
+    """
+    #TODO 6: Implemente la función tal y como se describe en la documentación.
+    pass
+
+
+# Funcion 7: TERMINAR; FALTA LO DE CARACTERES ESP
+def crear_correo_para_cupitubers(cupitube: dict) -> None:
+    
+    
+    for country in cupitube:
+        cupitubers = cupitube [country]
+        for cupituber in cupitubers:
+            nombre = cupituber ["name"]
+            nombre_corregido=""
+            for caracter in nombre:
+                if caracter.isalnum():
+                    nombre_corregido+=caracter
+            nombre_corregido=nombre_corregido.lower()
+            nombre_corregido=nombre_corregido.strip()
+            if len (nombre_corregido)>15:
+                nombre_corregido=nombre_corregido[0:15]
+            
+            
+            
+            fecha_inicio = cupituber ["started"]
+            ultimos_dos_digitos_año = int (fecha_inicio[0:4])
+            mes = int(fecha_inicio [5:7])
+        
+          
+            
+            cupituber ["correo"] = "{0}.{1}{2}@cupitube.com".format(nombre_corregido,ultimos_dos_digitos_año,mes)
+    
+    
+    """
+    Crea una dirección de correo electrónico para cada CupiTuber siguiendo un formato específico y la añade al diccionario.
+    Esta función modifica de forma permanente el diccionario recibido como parámetro, añadiendo una nueva llave "correo" con el valor asociado: [X].[Y][Z]@cupitube.com
+    Nota: Aquí, los corchetes se usan para indicar la ubicación para la información definida a continuación:
+    
+    Donde:
+        - [X]: Nombre del CupiTuber sin espacios y sin caracteres especiales.
+        - [Y]: Últimos dos dígitos del año de inicio del CupiTuber.
+        - [Z]: Los dos dígitos del mes de inicio del CupiTuber.
+    
+    Reglas de formato:
+        - El nombre del CupiTuber debe estar libre de espacios y caracteres especiales.
+              - Un carácter es especial si no es alfanumérico.
+        - La longitud máxima del nombre debe ser de 15 caracteres. Si se excede este límite, se toman solo los primeros 15 caracteres.
+        - Se debe añadir un punto (.) inmediatamente después del nombre.
+        - A continuación, se agregan los últimos dos dígitos del año de inicio.
+        - Luego, se añaden los dos dígitos del mes de inicio (sin guión o separador entre año y mes).
+        - El correo generado debe estar siempre en minúsculas.
+        
+    Parámetros:
+        cupitube (dict): Diccionario con la información de los CupiTubers.
+    
+    Ejemplo:
+        Para un CupiTuber con nombre "@PewDiePie" y fecha de inicio "2010-06-15",
+        el correo generado sería: "pewdiepie.1006@cupitube.com"
+    
+    Nota:
+        La función str.isalnum() permite verificar si una cadena es alfanumérica:
+        https://docs.python.org/es/3/library/stdtypes.html#str.isalnum
+    """
+    #TODO 7: Implemente la función tal y como se describe en la documentación.
+    pass
+
+
+# Función 8: REVISAR LO DEL RETURN
+def recomendar_cupituber(cupitube: dict, suscriptores_min: int, suscriptores_max: int, fecha_minima: str, fecha_maxima: str, videos_minimos:int, palabra_clave: str) -> dict:
+    
+    cupituber_recomendado = {}
+    categoria_con_mas_visitas = obtener_categoria_con_mas_visitas(cupitube)
+    categoria_buscada = categoria_con_mas_visitas
+    buscar = buscar_por_categoria_y_rango_suscriptores(cupitube, suscriptores_min, suscriptores_max, categoria_buscada)
+    
+    i=0
+    repetir=False
+    
+    while i < len (buscar) and repetir == False:
+        cupituber = buscar [i]
+        video_count = int (cupituber ["video_count"])
+        started = cupituber ["started"]
+        palabra_clave_ct = palabra_clave.lower().strip()
+        description = cupituber ["description"].lower().strip()
+    
+    
+        if video_count >= (int(videos_minimos)) and started >= fecha_minima and started <= fecha_minima and palabra_clave_ct in description:
+            cupituber_recomendado = cupituber
+                    
+        i = i+1
+        
+    return cupituber_recomendado
+
+
+                      
+    
+"""
+    Recomienda al primer (uno solo) CupiTuber que cumpla con todos los criterios de búsqueda especificados.
+    
+    La función busca un CupiTuber que:
+       - Pertenece a la categoría con más visitas totales.
+       - Tiene un número de suscriptores dentro del rango especificado.
+       - Ha publicado al menos la cantidad mínima de videos indicada.
+       - Ha comenzado a publicar dentro del rango de fechas especificado.
+       - Contiene la palabra clave dada como parte de su descripción (sin distinguir entre mayúsculas/minúsculas).
+    
+    Parámetros:
+       cupitube (dict): Diccionario con la información de los CupiTubers.
+       suscriptores_min (int): Cantidad mínima de suscriptores requerida (inclusiva).
+       suscriptores_max (int): Cantidad máxima de suscriptores permitida (inclusiva).
+       fecha_minima (str): Fecha mínima en formato YYYY-MM-DD (inclusiva).
+       fecha_maxima (str): Fecha máxima en formato YYYY-MM-DD (inclusiva).
+       videos_minimos (int): Cantidad mínima de videos requerida.
+       palabra_clave (str): Palabra clave que debe estar presente como parte de la descripción.
+           
+    Retorno:
+       dict: Información del primer CupiTuber que cumpla con todos los criterios.
+             Si no se encuentra ningún CupiTuber que cumpla, retorna un diccionario vacío.
+    
+    Notas:
+       - La búsqueda de la palabra clave no distingue entre mayúsculas y minúsculas.
+         Por ejemplo, si la palabra clave es "gAMer" y la descripción contiene "Gamer ingenioso", el criterio de palabra clave se cumple para ese CupiTuber.
+       - Por simplicidad, la búsqueda de la palabra clave se realiza también en subcadenas. 
+         Por ejemplo, si la palabra clave es "car", el criterio de palabra clave se cumpliría para descripciones que contengan palabras como: "car", "card", "scarce", o "carpet", etc.
+    """
+
+
+
+# Función 9: REVISAR
+def paises_por_categoria(cupitube: dict) -> dict:
+    
+    categoria_paises = {}
+    
+    for country in cupitube:
+        cupitubers = cupitube [country]
+        for cupituber in cupitubers:
+            country = cupituber ["country"]
+            category = cupituber ["category"]
+
+            
+            if category not in categoria_paises :
+                categoria_paises [category] = []
+            if country not in categoria_paises [category]:
+                categoria_paises [category].append(country)
+                
+                
+            
+    return categoria_paises
+    
+    """
+    Crea un diccionario que relaciona cada categoría de CupiTubers con una lista de países (sin duplicados) de origen de los CupiTubers en esa categoría.
+
+    Parámetros:
+        cupitube (dict): Diccionario con la información de los CupiTubers.
+
+    Retorno:
+        dict: Diccionario en el que las llaves son los nombres de las categorías y 
+              los valores son listas de los nombres de los países (sin duplicados) que tienen al menos un CupiTuber en dicha categoría.
+
+    Nota:
+        - No se permiten países repetidos en la misma categoría.
+        - Un país puede aparecer en varias categorías.
+        - Cada categoría debe tener al menos un país asociado.
+        - Por favor recuerde que el nombre un país en el dataset inicia con letra mayúscula, por ejemplo: "India"
+    
+    Ejemplo:    
+       Al considerar la categoría (llave) "Music", la lista de países únicos asociados a esta sería:
+           ['India', 'USA', 'Sweden', 'Russia', 'South Korea', 'Canada', 'Brazil', 'UK', 'Argentina', 'Poland', 'Saudi Arabia', 'Australia', 'Thailand', 'Spain', 'Indonesia', 'Mexico', 'France', 'Netherlands', 'Italy', 'Japan', 'Germany', 'South Africa', 'UAE', 'Turkey', 'China']
+       ATENCIÓN: Este solo es un ejemplo de una de las categorías que se reportaría como llave en el diccionario resultado. 
+       Su función debe reportar todas las categorías con su respectiva lista de países sin duplicados.
+    """
+    #TODO 9: Implemente la función tal y como se describe en la documentación.
+    pass
